@@ -70,6 +70,7 @@ internal static class GenericModConfigMenuIntegration
       () => I18n.Config_DonateMissingBundle_Name(),
       () => I18n.Config_DonateMissingBundle_Tooltip()
     );
+    api.AddSectionTitle(manifest, () => I18n.Config_OtherBundleMods_Title(), () => I18n.Config_OtherBundleMods_Tooltip());
     api.AddBoolOption(
       manifest,
       () => config.EnableUnlockableBundlesIntegration,
