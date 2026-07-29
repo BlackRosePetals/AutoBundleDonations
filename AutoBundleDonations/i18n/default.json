@@ -1,0 +1,17 @@
+{
+  "chat.donation": "Donated {{quantity}}x {{item}} to the {{bundle}} bundle.",
+
+  "config.enabled.name": "Enabled",
+  "config.enabled.tooltip": "When off, no bundle items are auto-donated.",
+  "config.showNotifications.name": "Show chat notifications",
+  "config.showNotifications.tooltip": "Show a chat message whenever an item is auto-donated.",
+
+  "config.rooms.title": "Rooms",
+  "config.donatePantry.name": "Donate to Pantry",
+  "config.donateCraftsRoom.name": "Donate to Crafts Room",
+  "config.donateFishTank.name": "Donate to Fish Tank",
+  "config.donateBoilerRoom.name": "Donate to Boiler Room",
+  "config.donateBulletinBoard.name": "Donate to Bulletin Board",
+  "config.donateMissingBundle.name": "Donate to the Missing Bundle",
+  "config.donateMissingBundle.tooltip": "Donates to the bonus Abandoned Joja Mart bundle once it's accessible. Completing it starts construction of the Movie Theater."
+}

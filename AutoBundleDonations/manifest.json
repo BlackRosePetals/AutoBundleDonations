@@ -1,0 +1,16 @@
+{
+  "Name": "Auto Bundle Donations",
+  "Author": "JustinMiller",
+  "Version": "1.0.0",
+  "Description": "Automatically donates eligible items to unlocked, incomplete Community Center bundles the moment they enter your inventory.",
+  "UniqueID": "JustinMiller.AutoBundleDonations",
+  "EntryDll": "AutoBundleDonations.dll",
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": [],
+  "Dependencies": [
+    {
+      "UniqueID": "spacechase0.GenericModConfigMenu",
+      "IsRequired": false
+    }
+  ]
+}

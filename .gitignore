@@ -1,0 +1,14 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+DebugBuilds/
+Releases/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# Local per-machine overrides
+*.csproj.local
