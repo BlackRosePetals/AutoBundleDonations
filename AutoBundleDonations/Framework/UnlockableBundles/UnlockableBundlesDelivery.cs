@@ -116,7 +116,12 @@ internal sealed class UnlockableBundlesDelivery
 
     try
     {
-      Assembly assembly = _api.GetType().Assembly;
+      // _api.GetType().Assembly is NOT Unlockable Bundles.dll here - SMAPI's GetApi<T>() hands back a dynamically
+      // generated proxy that implements IUnlockableBundlesApi, living in its own "StardewModdingAPI.Proxies"
+      // assembly, so reflecting off that object's type only ever finds the proxy's own members. The mod's real
+      // assembly has to be located separately, by its DLL name, among everything the game has already loaded.
+      Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "Unlockable Bundles")
+        ?? throw new TypeLoadException("Could not find the loaded 'Unlockable Bundles' assembly among the game's loaded assemblies.");
 
       Type bundleDictionaryType = RequireType(assembly, "Unlockable_Bundles.Lib.BundleDictionary");
       Type inventoryType = RequireType(assembly, "Unlockable_Bundles.Lib.ShopTypes.Inventory");
@@ -213,6 +218,7 @@ internal sealed class UnlockableBundlesDelivery
       if (allPaid)
       {
         _unlockableProcessPurchase!.Invoke(liveUnlockable, null);
+        _monitor.Log($"Unlockable Bundles integration: completed and purchased '{bundle.Key}'.", LogLevel.Info);
       }
     }
     catch (Exception e)
