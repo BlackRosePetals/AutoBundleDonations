@@ -170,7 +170,12 @@ internal sealed class BundleDelivery
       {
         cc.checkForNewJunimoNotes();
         cc.bundleRewards[bundleIndex] = true;
-        _monitor.Log($"Bundle '{bundleName}' (index {bundleIndex}, area {area}) is now complete.", LogLevel.Debug);
+        _monitor.Log(
+          $"Bundle '{bundleName}' (index {bundleIndex}, area {area}) is now complete. "
+          + $"cc.numberOfCompleteBundles() is now {cc.numberOfCompleteBundles()} "
+          + $"(Pantry/FishTank unlock at 1+, BoilerRoom at 2+, BulletinBoard at 3+, Vault at 4+).",
+          LogLevel.Debug
+        );
       }
     }
 
