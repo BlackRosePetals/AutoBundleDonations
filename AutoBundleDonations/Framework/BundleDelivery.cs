@@ -168,6 +168,19 @@ internal sealed class BundleDelivery
       // bundleRewards freshly false, and re-arm an already-collected reward indefinitely.
       if (donatedToThisBundle && IsBundleComplete(slotsFilled, requiredSlotCount))
       {
+        // cc.bundles.FieldDict[bundleIndex] is NOT sized to the ingredient count - NetWorldState.SetBundleData
+        // allocates it as ArgUtility.SplitBySpace(ingredients).Length, i.e. 3 slots per ingredient (id, count,
+        // quality), of which only the first "one per ingredient" are ever meaningfully indexed elsewhere. Vanilla
+        // itself only ever satisfies CommunityCenter.numberOfCompleteBundles() (which requires every slot in
+        // that oversized array to be true, padding included) by flood-filling the whole thing in
+        // JunimoNoteMenu.checkIfBundleIsComplete's finalize loop. Without doing the same here, a bundle we
+        // consider complete (enough to grant its own reward) would never count toward the 1/2/3/4-bundle
+        // thresholds that unlock Pantry, Fish Tank, Boiler Room, Bulletin Board and the Vault.
+        for (var i = 0; i < slotsFilled.Length; i++)
+        {
+          slotsFilled[i] = true;
+        }
+
         cc.checkForNewJunimoNotes();
         cc.bundleRewards[bundleIndex] = true;
         _monitor.Log(
