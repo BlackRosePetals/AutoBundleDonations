@@ -80,6 +80,7 @@ internal sealed class BundleDelivery
     // to be relevant (after the main rooms are already done).
     Dictionary<string, string> bundleData = Game1.netWorldState.Value.BundleData;
     var bundleIndicesByArea = new Dictionary<int, List<int>>();
+    var requiredSlotCountByBundle = new Dictionary<int, int>();
     var donatedAnything = false;
 
     foreach (KeyValuePair<string, string> entry in bundleData)
@@ -122,8 +123,27 @@ internal sealed class BundleDelivery
 
       string[] ingredientTokens = valueParts[2].Split(' ', StringSplitOptions.RemoveEmptyEntries);
       string bundleName = valueParts[6];
+      int totalListedIngredients = ingredientTokens.Length / 3;
 
-      for (var i = 0; i + 2 < ingredientTokens.Length; i += 3)
+      // Matches Bundle's own constructor exactly: some bundles (e.g. "any 4 of these 6 forageables") only
+      // require a subset of the listed ingredients, encoded as an optional 5th field that defaults to "all of
+      // them" when absent. Getting this wrong means a bundle that vanilla considers complete never registers as
+      // complete here, since not every listed slot ever gets filled.
+      int requiredSlotCount = int.TryParse(valueParts.ElementAtOrDefault(4), out int explicitRequiredCount)
+        ? explicitRequiredCount
+        : totalListedIngredients;
+      requiredSlotCountByBundle[bundleIndex] = requiredSlotCount;
+
+      var filledSlotCount = 0;
+      for (var i = 0; i < slotsFilled.Length; i++)
+      {
+        if (slotsFilled[i])
+        {
+          filledSlotCount++;
+        }
+      }
+
+      for (var i = 0; i + 2 < ingredientTokens.Length && filledSlotCount < requiredSlotCount; i += 3)
       {
         int slot = i / 3;
         if (slot >= slotsFilled.Length || slotsFilled[slot])
@@ -134,10 +154,11 @@ internal sealed class BundleDelivery
         if (TryDonateSlot(player, slotsFilled, slot, ingredientTokens[i], ingredientTokens[i + 1], ingredientTokens[i + 2], bundleName))
         {
           donatedAnything = true;
+          filledSlotCount++;
         }
       }
 
-      if (IsBundleComplete(slotsFilled) && !cc.bundleRewards[bundleIndex])
+      if (IsBundleComplete(slotsFilled, requiredSlotCount) && !cc.bundleRewards[bundleIndex])
       {
         cc.checkForNewJunimoNotes();
         cc.bundleRewards[bundleIndex] = true;
@@ -161,7 +182,8 @@ internal sealed class BundleDelivery
       }
 
       int completedCount = areaEntry.Value.Count(idx =>
-        cc.bundles.FieldDict.TryGetValue(idx, out NetArray<bool, NetBool>? slots) && IsBundleComplete(slots));
+        cc.bundles.FieldDict.TryGetValue(idx, out NetArray<bool, NetBool>? slots)
+        && IsBundleComplete(slots, requiredSlotCountByBundle.GetValueOrDefault(idx, slots.Length)));
       bool areaComplete = completedCount == areaEntry.Value.Count;
       if (!areaComplete)
       {
@@ -291,16 +313,20 @@ internal sealed class BundleDelivery
     return true;
   }
 
-  private static bool IsBundleComplete(NetArray<bool, NetBool> slots)
+  // A bundle is complete once at least requiredSlotCount slots are filled - not necessarily every listed slot
+  // (see the "any N of M" note where this is computed). Matches Bundle's own "num >= numberOfIngredientSlots"
+  // completion check exactly.
+  private static bool IsBundleComplete(NetArray<bool, NetBool> slots, int requiredSlotCount)
   {
+    var filled = 0;
     for (var i = 0; i < slots.Length; i++)
     {
-      if (!slots[i])
+      if (slots[i])
       {
-        return false;
+        filled++;
       }
     }
 
-    return true;
+    return filled >= requiredSlotCount;
   }
 }
