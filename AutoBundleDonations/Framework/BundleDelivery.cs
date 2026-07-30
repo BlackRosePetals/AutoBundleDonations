@@ -143,6 +143,7 @@ internal sealed class BundleDelivery
         }
       }
 
+      var donatedToThisBundle = false;
       for (var i = 0; i + 2 < ingredientTokens.Length && filledSlotCount < requiredSlotCount; i += 3)
       {
         int slot = i / 3;
@@ -154,11 +155,18 @@ internal sealed class BundleDelivery
         if (TryDonateSlot(player, slotsFilled, slot, ingredientTokens[i], ingredientTokens[i + 1], ingredientTokens[i + 2], bundleName))
         {
           donatedAnything = true;
+          donatedToThisBundle = true;
           filledSlotCount++;
         }
       }
 
-      if (IsBundleComplete(slotsFilled, requiredSlotCount) && !cc.bundleRewards[bundleIndex])
+      // Only run completion bookkeeping in the exact pass where we ourselves just filled the last slot - never
+      // re-derive it from cc.bundleRewards[bundleIndex] being false, since the game itself sets that back to
+      // false once the player collects the reward (see CommunityCenter.rewardGrabbed). Gating on that flag
+      // instead of on "did we just donate" caused every subsequent InventoryChanged tick after the player
+      // collected the reward - including from receiving the reward item itself - to see slots still filled and
+      // bundleRewards freshly false, and re-arm an already-collected reward indefinitely.
+      if (donatedToThisBundle && IsBundleComplete(slotsFilled, requiredSlotCount))
       {
         cc.checkForNewJunimoNotes();
         cc.bundleRewards[bundleIndex] = true;
