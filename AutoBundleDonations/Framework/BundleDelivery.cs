@@ -127,10 +127,11 @@ internal sealed class BundleDelivery
         }
       }
 
-      if (IsBundleComplete(slotsFilled))
+      if (IsBundleComplete(slotsFilled) && !cc.bundleRewards[bundleIndex])
       {
         cc.checkForNewJunimoNotes();
         cc.bundleRewards[bundleIndex] = true;
+        _monitor.Log($"Bundle '{bundleName}' (index {bundleIndex}, area {area}) is now complete.", LogLevel.Debug);
       }
     }
 
@@ -149,15 +150,25 @@ internal sealed class BundleDelivery
         continue;
       }
 
-      bool areaComplete = areaEntry.Value.All(idx =>
+      int completedCount = areaEntry.Value.Count(idx =>
         cc.bundles.FieldDict.TryGetValue(idx, out NetArray<bool, NetBool>? slots) && IsBundleComplete(slots));
+      bool areaComplete = completedCount == areaEntry.Value.Count;
       if (!areaComplete)
       {
         continue;
       }
 
+      bool wasAlreadyComplete = areaEntry.Key < 6 && cc.areasComplete[areaEntry.Key];
       cc.markAreaAsComplete(areaEntry.Key);
       cc.areaCompleteReward(areaEntry.Key);
+      if (!wasAlreadyComplete)
+      {
+        _monitor.Log(
+          $"All {completedCount} bundles in area {areaEntry.Key} are complete; called markAreaAsComplete + "
+          + $"areaCompleteReward (Game1.currentLocation is CommunityCenter: {Game1.currentLocation == cc}).",
+          LogLevel.Info
+        );
+      }
     }
 
     // Keep the cache other mods (and the vanilla note icons) read from in sync with what we just donated.
