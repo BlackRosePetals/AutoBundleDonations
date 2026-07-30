@@ -28,6 +28,11 @@ namespace AutoBundleDonations.Framework.UnlockableBundles;
 ///     removed from the player's inventory. If anything throws in between, the player keeps the item and the
 ///     bundle records an unearned credit - an unwanted but harmless outcome, chosen deliberately over the
 ///     alternative (item silently destroyed with nothing to show for it).</item>
+///     <item>Only the "CCBundle" shop type is touched at all. Other shop types (a single-item "repair this for
+///     N wood?" prompt, a parrot perch, etc.) finish through their own UI-coupled event/cutscene flow that this
+///     integration cannot safely trigger headlessly - calling ProcessPurchase() without going through it marks
+///     the bundle permanently Completed while the actual unlock (a map patch, typically) never applies, which is
+///     a real soft-lock, not just a missed convenience. See <see cref="TryDonateToBundle" />.</item>
 ///   </list>
 /// </remarks>
 internal sealed class UnlockableBundlesDelivery
@@ -49,6 +54,7 @@ internal sealed class UnlockableBundlesDelivery
   private MethodInfo? _unlockableProcessContribution;
   private MethodInfo? _unlockableAllRequirementsPaid;
   private MethodInfo? _unlockableProcessPurchase;
+  private PropertyInfo? _unlockableShopType;
 
   public UnlockableBundlesDelivery(ModConfig config, ChatNotifier chat, IModHelper helper, IMonitor monitor)
   {
@@ -140,6 +146,8 @@ internal sealed class UnlockableBundlesDelivery
       );
       _unlockableAllRequirementsPaid = RequireMethod(unlockableType, "AllRequirementsPaid");
       _unlockableProcessPurchase = RequireMethod(unlockableType, "ProcessPurchase");
+      _unlockableShopType = unlockableType.GetProperty("ShopType", BindingFlags.Public | BindingFlags.Instance)
+        ?? throw new MissingMemberException(unlockableType.FullName, "ShopType");
 
       _available = true;
       _monitor.Log("Unlockable Bundles detected - auto-donation enabled for its bundles too.", LogLevel.Info);
@@ -188,6 +196,31 @@ internal sealed class UnlockableBundlesDelivery
     }
 
     if (liveUnlockable == null)
+    {
+      return;
+    }
+
+    // Only the "CCBundle" shop type (a JunimoNoteMenu-style grid of slots, like this integration was built and
+    // verified against) completes safely through ProcessContribution + AllRequirementsPaid + ProcessPurchase
+    // alone. The other types (Dialogue, SpeechBubble, ParrotPerch - e.g. a "repair this bridge for 100 Stone?"
+    // prompt) route completion through their own UI interaction (a mutex lock, a squawk-delay timer, then
+    // SpeechBubble.WaitingForProcessShopEvent) that eventually calls Unlockable.ProcessShopEvent() to actually
+    // apply the map patch/cutscene. Calling ProcessPurchase() ourselves without ever going through that flow
+    // marks the bundle Completed (so the player can never re-trigger the prompt) while the world-visible unlock
+    // never happens - a permanent soft-lock, confirmed in testing. So: leave anything that isn't CCBundle alone
+    // entirely, never even touching the player's inventory for it.
+    string? shopType;
+    try
+    {
+      shopType = _unlockableShopType!.GetValue(liveUnlockable)?.ToString();
+    }
+    catch (Exception e)
+    {
+      _monitor.Log($"Unlockable Bundles integration: failed to read ShopType for '{bundle.Key}'. {e}", LogLevel.Trace);
+      return;
+    }
+
+    if (shopType != "CCBundle")
     {
       return;
     }
