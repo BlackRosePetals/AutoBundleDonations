@@ -14,7 +14,7 @@ public class ModEntry : Mod
   {
     I18n.Init(helper.Translation);
     _config = helper.ReadConfig<ModConfig>();
-    _delivery = new BundleDelivery(_config, new ChatNotifier(), helper, Monitor);
+    _delivery = new BundleDelivery(_config, new ChatNotifier(), Monitor);
 
     helper.Events.GameLoop.GameLaunched += OnGameLaunched;
     helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;

@@ -25,55 +25,19 @@ namespace AutoBundleDonations.Framework;
 internal sealed class BundleDelivery
 {
   private const string CommunityCenterLocationName = "CommunityCenter";
-  private const string AbandonedJojaMartLocationName = "AbandonedJojaMart";
-  private const string VisitedLocationsSaveDataKey = "visited-locations";
 
   // Vanilla itself hardcodes this bundle index for the bonus room (see AbandonedJojaMart.resetSharedState).
   private const int MissingBundleArea = 6;
 
   private readonly ModConfig _config;
   private readonly ChatNotifier _chat;
-  private readonly IModHelper _helper;
   private readonly IMonitor _monitor;
 
-  private HashSet<string>? _visitedLocations;
-
-  public BundleDelivery(ModConfig config, ChatNotifier chat, IModHelper helper, IMonitor monitor)
+  public BundleDelivery(ModConfig config, ChatNotifier chat, IMonitor monitor)
   {
     _config = config;
     _chat = chat;
-    _helper = helper;
     _monitor = monitor;
-  }
-
-  /// <summary>
-  ///   True once the player has, at some point in this save, actually stood in the given location - not just
-  ///   been mailed the key to it. Ungates auto-donation for that room/bonus area from that point on, persisted
-  ///   across reloads. Without this, donations start the instant a door-unlock mail flag exists, which can fire
-  ///   while the player is still walking toward the room for the very first time - before they've seen whatever
-  ///   introduction the game gives that space.
-  /// </summary>
-  private bool HasVisitedOnce(string locationName)
-  {
-    if (_visitedLocations == null)
-    {
-      _visitedLocations = _helper.Data.ReadSaveData<HashSet<string>>(VisitedLocationsSaveDataKey) ?? new HashSet<string>();
-    }
-
-    if (_visitedLocations.Contains(locationName))
-    {
-      return true;
-    }
-
-    if (Game1.currentLocation?.Name != locationName)
-    {
-      return false;
-    }
-
-    _visitedLocations.Add(locationName);
-    _helper.Data.WriteSaveData(VisitedLocationsSaveDataKey, _visitedLocations);
-    _monitor.Log($"Player has now visited {locationName} at least once; auto-donation for it is active from now on.", LogLevel.Info);
-    return true;
   }
 
   public void Run(Farmer player)
@@ -96,7 +60,12 @@ internal sealed class BundleDelivery
       return;
     }
 
-    if (!HasVisitedOnce(CommunityCenterLocationName))
+    // Matches JunimoNoteMenu's own scrambledText check (see receiveLeftClick, which bails out of any donation
+    // attempt entirely while this is unset): until the player has been through tablet -> sleep -> Wizard visit,
+    // the note text reads as "???" and vanilla itself refuses every donation click, not just displaying garbled
+    // text. hasOrWillReceiveMail (not mailReceived) matches vanilla exactly - the mail is only queued for
+    // tomorrow at the moment of the Wizard cutscene, and that's already enough to un-scramble the same day.
+    if (!player.hasOrWillReceiveMail("canReadJunimoText"))
     {
       return;
     }
@@ -231,15 +200,14 @@ internal sealed class BundleDelivery
     };
   }
 
-  private bool IsAreaUnlocked(CommunityCenter cc, int area)
+  private static bool IsAreaUnlocked(CommunityCenter cc, int area)
   {
     // shouldNoteAppearInArea(6) only checks that the prerequisite story event has been *seen*, not that the
     // room's door mail flag has actually been received - those can be days apart while waiting for a stormy
-    // night. Gate on the same flag the game itself uses to decide whether the room is walk-in-able, plus
-    // (matching the main CC gate above) an actual first visit to that location.
+    // night. Gate on the same flag the game itself uses to decide whether the room is walk-in-able.
     if (area == MissingBundleArea)
     {
-      return Game1.MasterPlayer.mailReceived.Contains("abandonedJojaMartAccessible") && HasVisitedOnce(AbandonedJojaMartLocationName);
+      return Game1.MasterPlayer.mailReceived.Contains("abandonedJojaMartAccessible");
     }
 
     return cc.shouldNoteAppearInArea(area);
