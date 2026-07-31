@@ -54,7 +54,11 @@ internal sealed class UnlockableBundlesDelivery
   private MethodInfo? _unlockableProcessContribution;
   private MethodInfo? _unlockableAllRequirementsPaid;
   private MethodInfo? _unlockableProcessPurchase;
+  private MethodInfo? _unlockableHasShopEvent;
+  private MethodInfo? _unlockableProcessShopEvent;
   private PropertyInfo? _unlockableShopType;
+  private PropertyInfo? _unlockableBundleSlots;
+  private PropertyInfo? _unlockableBookId;
 
   public UnlockableBundlesDelivery(ModConfig config, ChatNotifier chat, IModHelper helper, IMonitor monitor)
   {
@@ -98,14 +102,24 @@ internal sealed class UnlockableBundlesDelivery
       return;
     }
 
-    foreach (IBundle bundle in bundlesByLocation.Values.SelectMany(list => list))
+    // Despite the name, IUnlockableBundlesApi.getBundles() keys this dictionary by bundle ID, not by location -
+    // confirmed by reading UnlockableBundlesAPI.GetAllBundleStates(): dictionary2.Add(key, list) where key is
+    // unlockableSaveDatum.Key (the bundle's own ID) and list is that same bundle's states across locations. So
+    // each IList<IBundle> here is "this one bundle's states," never a group of sibling bundles - it can't be
+    // used to look up a page's parent book. Flatten everything into a single by-ID lookup instead.
+    List<IBundle> allBundles = bundlesByLocation.Values.SelectMany(list => list).ToList();
+    Dictionary<string, IBundle> bundlesByKey = allBundles
+      .GroupBy(b => b.Key)
+      .ToDictionary(g => g.Key, g => g.First());
+
+    foreach (IBundle bundle in allBundles)
     {
-      if (!bundle.Discovered || bundle.Purchased)
+      if (bundle.Purchased)
       {
         continue;
       }
 
-      TryDonateToBundle(player, bundle);
+      TryDonateToBundle(player, bundle, bundlesByKey);
     }
   }
 
@@ -146,8 +160,14 @@ internal sealed class UnlockableBundlesDelivery
       );
       _unlockableAllRequirementsPaid = RequireMethod(unlockableType, "AllRequirementsPaid");
       _unlockableProcessPurchase = RequireMethod(unlockableType, "ProcessPurchase");
+      _unlockableHasShopEvent = RequireMethod(unlockableType, "HasShopEvent");
+      _unlockableProcessShopEvent = RequireMethod(unlockableType, "ProcessShopEvent", typeof(Action));
       _unlockableShopType = unlockableType.GetProperty("ShopType", BindingFlags.Public | BindingFlags.Instance)
         ?? throw new MissingMemberException(unlockableType.FullName, "ShopType");
+      _unlockableBundleSlots = unlockableType.GetProperty("BundleSlots", BindingFlags.Public | BindingFlags.Instance)
+        ?? throw new MissingMemberException(unlockableType.FullName, "BundleSlots");
+      _unlockableBookId = unlockableType.GetProperty("BookId", BindingFlags.Public | BindingFlags.Instance)
+        ?? throw new MissingMemberException(unlockableType.FullName, "BookId");
 
       _available = true;
       _monitor.Log("Unlockable Bundles detected - auto-donation enabled for its bundles too.", LogLevel.Info);
@@ -182,7 +202,7 @@ internal sealed class UnlockableBundlesDelivery
     return method ?? throw new MissingMethodException(type.FullName, name);
   }
 
-  private void TryDonateToBundle(Farmer player, IBundle bundle)
+  private void TryDonateToBundle(Farmer player, IBundle bundle, IReadOnlyDictionary<string, IBundle> bundlesByKey)
   {
     object? liveUnlockable;
     try
@@ -197,6 +217,55 @@ internal sealed class UnlockableBundlesDelivery
 
     if (liveUnlockable == null)
     {
+      return;
+    }
+
+    // A bundle needs to be Discovered before we'll touch it, mirroring vanilla's shouldNoteAppearInArea gate -
+    // the physical, in-world confirmation that the player has actually clicked on it at least once. Pages
+    // (BookId non-empty, per Unlockable.IsPage()) are a wrinkle: confirmed by reading the framework's own code
+    // that a page's Unlockable never gets its own physical ShopObject in the world - it only ever lives inside
+    // the parent book's ShopObject.Pages list (see ShopPlacement.PlaceShop) - and neither BundleBookMenu nor
+    // BundlePageMenu ever calls SetDiscovered for a page, so a page's own Discovered flag never becomes true no
+    // matter what the player does. But that doesn't mean pages should skip the gate entirely: confirmed in
+    // testing that doing so let items auto-donate into a page whose parent book had never been clicked on in
+    // the world at all (i.e. the player never had any way to even know that bundle existed). The correct proxy
+    // is the *book's* Discovered flag - it's the one thing in this framework that actually flips only when the
+    // player physically interacts with something in the world - so pages are gated on their parent book instead
+    // of themselves.
+    string? bookId;
+    try
+    {
+      bookId = _unlockableBookId!.GetValue(liveUnlockable)?.ToString();
+    }
+    catch (Exception e)
+    {
+      _monitor.Log($"Unlockable Bundles integration: failed to read BookId for '{bundle.Key}'. {e}", LogLevel.Trace);
+      return;
+    }
+
+    bool discovered;
+    if (string.IsNullOrEmpty(bookId))
+    {
+      discovered = bundle.Discovered;
+    }
+    else if (bundlesByKey.TryGetValue(bookId, out IBundle? parentBook))
+    {
+      discovered = parentBook.Discovered;
+    }
+    else
+    {
+      // Can't find the parent book to check - fail safe rather than risk donating into something the player
+      // has never seen.
+      _monitor.Log(
+        $"Unlockable Bundles integration: skipping '{bundle.Key}' - could not find its parent book '{bookId}' to check Discovered.",
+        LogLevel.Trace
+      );
+      return;
+    }
+
+    if (!discovered)
+    {
+      _monitor.Log($"Unlockable Bundles integration: skipping '{bundle.Key}' - not yet Discovered.", LogLevel.Trace);
       return;
     }
 
@@ -222,8 +291,75 @@ internal sealed class UnlockableBundlesDelivery
 
     if (shopType != "CCBundle")
     {
+      _monitor.Log($"Unlockable Bundles integration: skipping '{bundle.Key}' - ShopType is '{shopType}', not CCBundle.", LogLevel.Trace);
       return;
     }
+
+    // Even CCBundle bundles can have a scripted ShopEvent attached (e.g. an intro cutscene) - confirmed by
+    // reading BundlePageMenu.CheckIfBundleIsComplete()/update(): completing a bundle only calls
+    // Unlockable.ProcessPurchase() (which just flags Completed + queues a mail letter), and the ACTUAL reward
+    // grant + map patch application (Unlockable.ProcessShopEvent(), which fades to black and starts a
+    // location-bound Event if HasShopEvent() is true) only fires from the menu's own update() loop after an
+    // 800ms UI timer - something that only runs while that menu is open. Confirmed in testing: auto-completing
+    // 'Lumisteria.MtVapius_StartingBundle' (which has a shop event) headlessly soft-locked it - Completed got
+    // set, but the cutscene/reward never ran and the player had no way to trigger it afterward. Bundles without
+    // a shop event are unaffected (ProcessShopEvent's non-event branch just calls MapPatches.ApplyUnlockable +
+    // OpenRewardsMenu directly, no UI/location dependency), which is why donating to those completed cleanly.
+    // So: skip shop-event bundles entirely, same as non-CCBundle types - leave them for the player to finish
+    // manually in person, where the normal menu flow handles the cutscene safely.
+    bool hasShopEvent;
+    try
+    {
+      hasShopEvent = (bool)_unlockableHasShopEvent!.Invoke(liveUnlockable, null)!;
+    }
+    catch (Exception e)
+    {
+      _monitor.Log($"Unlockable Bundles integration: failed to read HasShopEvent for '{bundle.Key}'. {e}", LogLevel.Trace);
+      return;
+    }
+
+    if (hasShopEvent)
+    {
+      _monitor.Log($"Unlockable Bundles integration: skipping '{bundle.Key}' - has a ShopEvent (cutscene-driven completion).", LogLevel.Trace);
+      return;
+    }
+
+    // Unlockable._alreadyPaidIndex[key] is later used as a direct index into BundlePageMenu.AlreadyPaidSlots
+    // (a list sized to BundleSlots) - see UpdateAlreadyPaidSlots(). The framework's own donation code
+    // (BundlePageMenu.TryPayExceptionItem) assigns this by finding the first still-empty slot, which - since
+    // slots fill strictly in order and are never freed early - is equivalent to "how many requirements are
+    // already paid, before this one." We have to reproduce that ourselves and pass it explicitly: leaving
+    // ProcessContribution's index at its default (-1) stores -1 into _alreadyPaidIndex, and the next time the
+    // player opens that bundle's menu, AlreadyPaidSlots[-1] throws ArgumentOutOfRangeException on every single
+    // update tick (confirmed in testing - the game log showed exactly this exception spamming from
+    // BundlePageMenu.UpdateAlreadyPaidSlots via ShopObject.OpenMenu).
+    //
+    // The count has to come from bundle.AlreadyPaid (the API snapshot, backed by ModData.SetPartiallyPurchased -
+    // a plain synchronous Dictionary write), not from reflecting Unlockable's own live "_alreadyPaid" netcode
+    // dictionary field: confirmed in testing that reading the latter via a raw IEnumerable cast returns a
+    // constant, wrong count across separate donation passes (repeatedly reads back the count from before our
+    // first-ever donation, even though the framework's own AllRequirementsPaid() - which reads the same field
+    // through its proper typed accessor - tracks the true count fine). That stale count made every donation
+    // after the first reuse the same slot index, so the AlreadyPaidSlots UI visibly overwrote one donated item
+    // with the next instead of showing both.
+    int bundleSlots;
+    try
+    {
+      bundleSlots = (int)_unlockableBundleSlots!.GetValue(liveUnlockable)!;
+    }
+    catch (Exception e)
+    {
+      _monitor.Log($"Unlockable Bundles integration: failed to read BundleSlots for '{bundle.Key}'. {e}", LogLevel.Trace);
+      return;
+    }
+
+    int nextSlotIndex = bundle.AlreadyPaid.Count;
+
+    _monitor.Log(
+      $"Unlockable Bundles integration: '{bundle.Key}' has BundleSlots={bundleSlots}, "
+      + $"{bundle.Price.Count} priced requirement(s), already-paid count={nextSlotIndex} before this pass.",
+      LogLevel.Trace
+    );
 
     var donatedAnything = false;
 
@@ -234,9 +370,15 @@ internal sealed class UnlockableBundlesDelivery
         continue;
       }
 
-      if (TryDonateRequirement(player, liveUnlockable, requirement, bundle.Key))
+      if (nextSlotIndex >= bundleSlots)
+      {
+        break;
+      }
+
+      if (TryDonateRequirement(player, liveUnlockable, requirement, nextSlotIndex, bundle.Key))
       {
         donatedAnything = true;
+        nextSlotIndex++;
       }
     }
 
@@ -251,6 +393,11 @@ internal sealed class UnlockableBundlesDelivery
       if (allPaid)
       {
         _unlockableProcessPurchase!.Invoke(liveUnlockable, null);
+        // ProcessPurchase() alone doesn't grant the reward or apply the map patch - see the HasShopEvent
+        // remarks above. We already confirmed this bundle has no ShopEvent, so ProcessShopEvent()'s
+        // no-event branch is a pure state mutation (MapPatches.ApplyUnlockable + OpenRewardsMenu), safe to
+        // call immediately without a menu open.
+        _unlockableProcessShopEvent!.Invoke(liveUnlockable, new object?[] { null });
         _monitor.Log($"Unlockable Bundles integration: completed and purchased '{bundle.Key}'.", LogLevel.Info);
       }
     }
@@ -264,7 +411,7 @@ internal sealed class UnlockableBundlesDelivery
     }
   }
 
-  private bool TryDonateRequirement(Farmer player, object liveUnlockable, KeyValuePair<string, int> requirement, string bundleName)
+  private bool TryDonateRequirement(Farmer player, object liveUnlockable, KeyValuePair<string, int> requirement, int slotIndex, string bundleName)
   {
     bool hasEnough;
     try
@@ -285,8 +432,12 @@ internal sealed class UnlockableBundlesDelivery
     try
     {
       // Credit first, remove second - see class remarks for why.
-      _unlockableProcessContribution!.Invoke(liveUnlockable, new object?[] { requirement, -1, null });
+      _unlockableProcessContribution!.Invoke(liveUnlockable, new object?[] { requirement, slotIndex, null });
       _inventoryRemoveItemsOfRequirement!.Invoke(null, new object[] { player, requirement });
+      _monitor.Log(
+        $"Unlockable Bundles integration: donated '{requirement.Key}' toward '{bundleName}' at slot index {slotIndex}.",
+        LogLevel.Trace
+      );
     }
     catch (Exception e)
     {
