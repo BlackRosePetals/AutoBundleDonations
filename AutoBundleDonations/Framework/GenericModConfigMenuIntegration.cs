@@ -70,6 +70,14 @@ internal static class GenericModConfigMenuIntegration
       () => I18n.Config_DonateMissingBundle_Name(),
       () => I18n.Config_DonateMissingBundle_Tooltip()
     );
+    api.AddSectionTitle(manifest, () => I18n.Config_OtherBundleMods_Title(), () => I18n.Config_OtherBundleMods_Tooltip());
+    api.AddBoolOption(
+      manifest,
+      () => config.EnableUnlockableBundlesIntegration,
+      v => config.EnableUnlockableBundlesIntegration = v,
+      () => I18n.Config_EnableUnlockableBundles_Name(),
+      () => I18n.Config_EnableUnlockableBundles_Tooltip()
+    );
   }
 
   private static void Reset(ModConfig config)
@@ -83,5 +91,6 @@ internal static class GenericModConfigMenuIntegration
     config.DonateBoilerRoom = defaults.DonateBoilerRoom;
     config.DonateBulletinBoard = defaults.DonateBulletinBoard;
     config.DonateMissingBundle = defaults.DonateMissingBundle;
+    config.EnableUnlockableBundlesIntegration = defaults.EnableUnlockableBundlesIntegration;
   }
 }

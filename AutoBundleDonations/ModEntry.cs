@@ -1,4 +1,5 @@
 using AutoBundleDonations.Framework;
+using AutoBundleDonations.Framework.UnlockableBundles;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -9,12 +10,15 @@ public class ModEntry : Mod
 {
   private ModConfig _config = null!;
   private BundleDelivery _delivery = null!;
+  private UnlockableBundlesDelivery _unlockableBundlesDelivery = null!;
 
   public override void Entry(IModHelper helper)
   {
     I18n.Init(helper.Translation);
     _config = helper.ReadConfig<ModConfig>();
-    _delivery = new BundleDelivery(_config, new ChatNotifier(), Monitor);
+    var chat = new ChatNotifier();
+    _delivery = new BundleDelivery(_config, chat, Monitor);
+    _unlockableBundlesDelivery = new UnlockableBundlesDelivery(_config, chat, helper, Monitor);
 
     helper.Events.GameLoop.GameLaunched += OnGameLaunched;
     helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
@@ -47,9 +51,12 @@ public class ModEntry : Mod
 
   private void TryRunDelivery()
   {
-    if (Context.IsWorldReady)
+    if (!Context.IsWorldReady)
     {
-      _delivery.Run(Game1.player);
+      return;
     }
+
+    _delivery.Run(Game1.player);
+    _unlockableBundlesDelivery.Run(Game1.player);
   }
 }
