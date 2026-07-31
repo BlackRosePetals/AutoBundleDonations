@@ -1,7 +1,7 @@
 {
   "Name": "Auto Bundle Donations",
   "Author": "JustinMiller",
-  "Version": "1.0.1",
+  "Version": "1.1.0",
   "Description": "Automatically donates eligible items to unlocked, incomplete Community Center bundles (including the Missing Bundle) the moment they enter your inventory. Also supports bundles from content packs built on the Unlockable Bundles framework, such as Joja Civic Center or Visit Mount Vapius, if that framework is installed.",
   "UniqueID": "JustinMiller.AutoBundleDonations",
   "EntryDll": "AutoBundleDonations.dll",
