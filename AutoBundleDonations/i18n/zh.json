@@ -1,0 +1,21 @@
+{
+  "chat.donation": "已将 {{quantity}} 个 {{item}} 捐赠给 {{bundle}} 收集包.",
+
+  "config.enabled.name": "启用",
+  "config.enabled.tooltip": "关闭时, 不会自动捐赠任何收集包物品.",
+  "config.showNotifications.name": "显示捐赠消息通知",
+  "config.showNotifications.tooltip": "每当自动捐赠物品时显示一条捐赠消息通知.",
+
+  "config.rooms.title": "房间",
+  "config.donatePantry.name": "捐赠给茶水间",
+  "config.donateCraftsRoom.name": "捐赠给工艺室",
+  "config.donateFishTank.name": "捐赠给鱼缸",
+  "config.donateBoilerRoom.name": "捐赠给锅炉房",
+  "config.donateBulletinBoard.name": "捐赠给公告板",
+  "config.donateMissingBundle.name": "捐赠给缺失收集包",
+  "config.donateMissingBundle.tooltip": "捐赠给可解锁的废弃Joja超市收集包（一旦可访问）.完成它将启动电影院的建造.",
+  "config.otherBundleMods.title": "非原版收集包",
+  "config.otherBundleMods.tooltip": "以下选项适用于其他模组添加的收集包,而非原版社区中心.",
+  "config.enableUnlockableBundles.name": "支持可解锁收集包模组",
+  "config.enableUnlockableBundles.tooltip": "同时自动捐赠给基于可解锁收集包框架（例如访问雾呜山峰、Joja市民中心）构建的内容包的收集包（如果已安装）.此功能通过反射该框架的内部实现,因为它没有发布自己的物品贡献方式——若你希望避免该风险,请禁用此项."
+}
