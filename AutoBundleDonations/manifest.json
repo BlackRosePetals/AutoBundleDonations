@@ -6,7 +6,7 @@
   "UniqueID": "JustinMiller.AutoBundleDonations",
   "EntryDll": "AutoBundleDonations.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": [],
+  "UpdateKeys": [ "Nexus:49967" ],
   "Dependencies": [
     {
       "UniqueID": "spacechase0.GenericModConfigMenu",
