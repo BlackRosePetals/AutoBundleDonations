@@ -1,0 +1,30 @@
+{
+  "chat.donation": "{{quantity}}x {{item}} donné(s) à l'assortiment {{bundle}}.",
+
+  "config.enabled.name": "Activé",
+  "config.enabled.tooltip": "Si désactivé, aucun objet d'assortiment n'est donné automatiquement.",
+  "config.showNotifications.name": "Afficher les notifications de chat",
+  "config.showNotifications.tooltip": "Affiche un message de chat chaque fois qu'un objet est donné automatiquement.",
+
+  "config.rooms.title": "Salles",
+  "config.donatePantry.name": "Donner au Garde-Manger",
+  "config.donateCraftsRoom.name": "Donner à l'Atelier",
+  "config.donateFishTank.name": "Donner à l'Aquarium",
+  "config.donateBoilerRoom.name": "Donner à la Chaufferie",
+  "config.donateBulletinBoard.name": "Donner au Tableau d'Affichage",
+  "config.donateMissingBundle.name": "Donner à l'Assortiment Manquant",
+  "config.donateMissingBundle.tooltip": "Fait un don à l'assortiment bonus du Joja Mart Abandonné une fois qu'il est accessible. Le compléter lance la construction du Cinéma.",
+
+  "config.valuableItems.title": "Objets précieux",
+  "config.withholdValuableItems.name": "Conserver les objets précieux",
+  "config.withholdValuableItems.tooltip": "Garde l'Éclat Prismatique, l'Œuf de Dinosaure et les gemmes de base (Diamant, Rubis, Émeraude, Jade, Aigue-marine, Topaze, Améthyste) dans votre inventaire au lieu de les donner automatiquement à un assortiment - actuellement pertinent uniquement pour l'Aigue-marine de l'Assortiment Teinture et l'Éclat Prismatique de l'Assortiment Manquant. Correspond au réglage par défaut d'Auto Museum Donations pour ces mêmes objets.",
+
+  "config.otherBundleMods.title": "Assortiments non vanilla",
+  "config.otherBundleMods.tooltip": "Les options ci-dessous s'appliquent aux assortiments ajoutés par d'autres mods, pas au Centre Communautaire vanilla.",
+  "config.enableUnlockableBundles.name": "Prendre en charge les mods Unlockable Bundles",
+  "config.enableUnlockableBundles.tooltip": "Fait aussi don automatiquement aux assortiments des packs de contenu basés sur le framework Unlockable Bundles (ex. Visit Mount Vapius, Joja Civic Center), s'ils sont installés. Cela fonctionne par réflexion dans les composants internes de ce framework, car celui-ci ne propose pas sa propre méthode pour contribuer des objets - désactivez cette option si vous préférez éviter ce risque.",
+
+  "config.modCompatibility.title": "Compatibilité avec d'autres mods",
+  "config.prioritizeMuseum.name": "Prioriser les dons au Musée",
+  "config.prioritizeMuseum.tooltip": "Si Auto Museum Donations est aussi installé, laissez-le réclamer en premier les artefacts et minéraux pour le Musée, avant que ce mod ne les donne à un assortiment du Centre Communautaire. Sans effet si Auto Museum Donations n'est pas installé."
+}

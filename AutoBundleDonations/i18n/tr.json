@@ -1,0 +1,30 @@
+{
+  "chat.donation": "{{bundle}} paketine {{quantity}}x {{item}} bağışlandı.",
+
+  "config.enabled.name": "Etkin",
+  "config.enabled.tooltip": "Kapalıyken hiçbir paket eşyası otomatik olarak bağışlanmaz.",
+  "config.showNotifications.name": "Sohbet bildirimlerini göster",
+  "config.showNotifications.tooltip": "Bir eşya otomatik olarak bağışlandığında sohbet mesajı gösterir.",
+
+  "config.rooms.title": "Odalar",
+  "config.donatePantry.name": "Kilere bağışla",
+  "config.donateCraftsRoom.name": "Zanaat Odasına bağışla",
+  "config.donateFishTank.name": "Balık Tankına bağışla",
+  "config.donateBoilerRoom.name": "Kazan Dairesine bağışla",
+  "config.donateBulletinBoard.name": "İlan Panosuna bağışla",
+  "config.donateMissingBundle.name": "Eksik Pakete bağışla",
+  "config.donateMissingBundle.tooltip": "Terk Edilmiş Joja Market'teki bonus pakete, erişilebilir olur olmaz bağış yapar. Tamamlanması Sinema inşaatını başlatır.",
+
+  "config.valuableItems.title": "Değerli eşyalar",
+  "config.withholdValuableItems.name": "Değerli eşyaları elde tut",
+  "config.withholdValuableItems.tooltip": "Prizmatik Kırıntı, Dinozor Yumurtası ve temel değerli taşları (Elmas, Yakut, Zümrüt, Yeşim, Akuamarin, Topaz, Ametist) bir pakete otomatik bağışlamak yerine envanterinizde tutar - şu anda yalnızca Boya Paketi'nin Akuamarini ve Eksik Paket'in Prizmatik Kırıntısı için geçerlidir. Aynı eşyalar için Auto Museum Donations'ın varsayılan ayarını yansıtır.",
+
+  "config.otherBundleMods.title": "Vanilya dışı paketler",
+  "config.otherBundleMods.tooltip": "Aşağıdaki seçenekler, diğer modlar tarafından eklenen paketler için geçerlidir, vanilya Cemaat Merkezi için değil.",
+  "config.enableUnlockableBundles.name": "Unlockable Bundles modlarını destekle",
+  "config.enableUnlockableBundles.tooltip": "Yüklüyse, Unlockable Bundles çatısı üzerine kurulu içerik paketlerindeki (ör. Visit Mount Vapius, Joja Civic Center) paketlere de otomatik olarak bağış yapar. Bu, söz konusu çatının kendi iç yapılarına reflection ile erişilerek çalışır, çünkü çatı eşya bağışlamak için kendi bir yöntem sunmaz - bu riski almak istemiyorsanız bu seçeneği kapatın.",
+
+  "config.modCompatibility.title": "Mod uyumluluğu",
+  "config.prioritizeMuseum.name": "Müze bağışlarını önceliklendir",
+  "config.prioritizeMuseum.tooltip": "Auto Museum Donations da yüklüyse, bu mod eşyaları bunun yerine bir Cemaat Merkezi paketine bağışlamadan önce, Müze için eserleri ve mineralleri önce onun almasına izin verir. Auto Museum Donations yüklü değilse hiçbir etkisi yoktur."
+}

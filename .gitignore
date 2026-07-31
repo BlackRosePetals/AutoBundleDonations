@@ -12,3 +12,4 @@ Releases/
 
 # Local per-machine overrides
 *.csproj.local
+WorkspaceSettings.xml

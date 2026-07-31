@@ -1,0 +1,30 @@
+{
+  "chat.donation": "Пожертвовано {{quantity}}x {{item}} в набор «{{bundle}}».",
+
+  "config.enabled.name": "Включено",
+  "config.enabled.tooltip": "Если выключено, ни один предмет для наборов не будет жертвоваться автоматически.",
+  "config.showNotifications.name": "Показывать уведомления в чате",
+  "config.showNotifications.tooltip": "Показывает сообщение в чате при каждом автоматическом пожертвовании предмета.",
+
+  "config.rooms.title": "Комнаты",
+  "config.donatePantry.name": "Жертвовать в Кладовую",
+  "config.donateCraftsRoom.name": "Жертвовать в Мастерскую",
+  "config.donateFishTank.name": "Жертвовать в Аквариум",
+  "config.donateBoilerRoom.name": "Жертвовать в Котельную",
+  "config.donateBulletinBoard.name": "Жертвовать на Доску объявлений",
+  "config.donateMissingBundle.name": "Жертвовать в Пропавший набор",
+  "config.donateMissingBundle.tooltip": "Жертвует в бонусный набор Заброшенного Джоджа Марта, как только он станет доступен. Завершение набора запускает строительство Кинотеатра.",
+
+  "config.valuableItems.title": "Ценные предметы",
+  "config.withholdValuableItems.name": "Придерживать ценные предметы",
+  "config.withholdValuableItems.tooltip": "Оставляет Призматический осколок, Яйцо динозавра и базовые самоцветы (Алмаз, Рубин, Изумруд, Нефрит, Аквамарин, Топаз, Аметист) в инвентаре вместо автоматического пожертвования в набор - на данный момент это касается только Аквамарина для набора «Краситель» и Призматического осколка для «Пропавшего набора». Соответствует настройке Auto Museum Donations по умолчанию для тех же предметов.",
+
+  "config.otherBundleMods.title": "Не ванильные наборы",
+  "config.otherBundleMods.tooltip": "Приведённые ниже опции относятся к наборам, добавленным другими модами, а не к ванильному Общественному центру.",
+  "config.enableUnlockableBundles.name": "Поддержка модов на основе Unlockable Bundles",
+  "config.enableUnlockableBundles.tooltip": "Также автоматически жертвует в наборы из контент-паков, созданных на основе фреймворка Unlockable Bundles (напр. Visit Mount Vapius, Joja Civic Center), если они установлены. Это работает через reflection во внутренние компоненты этого фреймворка, поскольку он сам не предоставляет способа пожертвовать предметы - отключите эту опцию, если хотите избежать этого риска.",
+
+  "config.modCompatibility.title": "Совместимость с модами",
+  "config.prioritizeMuseum.name": "Приоритет пожертвований в Музей",
+  "config.prioritizeMuseum.tooltip": "Если Auto Museum Donations тоже установлен, позволяет ему первым забирать артефакты и минералы для Музея, прежде чем этот мод пожертвует их в набор Общественного центра. Не действует, если Auto Museum Donations не установлен."
+}

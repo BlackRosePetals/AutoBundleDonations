@@ -1,0 +1,30 @@
+{
+  "chat.donation": "Se donaron {{quantity}}x {{item}} al paquete {{bundle}}.",
+
+  "config.enabled.name": "Activado",
+  "config.enabled.tooltip": "Si está desactivado, no se donará automáticamente ningún objeto de paquete.",
+  "config.showNotifications.name": "Mostrar notificaciones en el chat",
+  "config.showNotifications.tooltip": "Muestra un mensaje en el chat cada vez que se dona un objeto automáticamente.",
+
+  "config.rooms.title": "Salas",
+  "config.donatePantry.name": "Donar a la Despensa",
+  "config.donateCraftsRoom.name": "Donar a la Sala de Manualidades",
+  "config.donateFishTank.name": "Donar a la Pecera",
+  "config.donateBoilerRoom.name": "Donar a la Sala de Calderas",
+  "config.donateBulletinBoard.name": "Donar al Tablón de Anuncios",
+  "config.donateMissingBundle.name": "Donar al Paquete Perdido",
+  "config.donateMissingBundle.tooltip": "Dona al paquete adicional del Joja Mart Abandonado en cuanto sea accesible. Completarlo inicia la construcción del Cine.",
+
+  "config.valuableItems.title": "Objetos valiosos",
+  "config.withholdValuableItems.name": "Retener objetos valiosos",
+  "config.withholdValuableItems.tooltip": "Mantiene el Fragmento Prismático, el Huevo de Dinosaurio y las gemas básicas (Diamante, Rubí, Esmeralda, Jade, Aguamarina, Topacio, Amatista) en tu inventario en lugar de donarlos automáticamente a un paquete - actualmente solo relevante para la Aguamarina del Paquete de Tinte y el Fragmento Prismático del Paquete Perdido. Coincide con el valor predeterminado de Auto Museum Donations para los mismos objetos.",
+
+  "config.otherBundleMods.title": "Paquetes no vanilla",
+  "config.otherBundleMods.tooltip": "Las siguientes opciones se aplican a paquetes añadidos por otros mods, no al Centro Comunal original.",
+  "config.enableUnlockableBundles.name": "Compatibilidad con mods de Unlockable Bundles",
+  "config.enableUnlockableBundles.tooltip": "También dona automáticamente a paquetes de packs de contenido basados en el framework Unlockable Bundles (p. ej. Visit Mount Vapius, Joja Civic Center), si están instalados. Esto funciona mediante reflexión sobre los componentes internos de ese framework, ya que no ofrece su propia forma de contribuir objetos; desactiva esta opción si prefieres evitar ese riesgo.",
+
+  "config.modCompatibility.title": "Compatibilidad con mods",
+  "config.prioritizeMuseum.name": "Priorizar donaciones al Museo",
+  "config.prioritizeMuseum.tooltip": "Si Auto Museum Donations también está instalado, permite que reclame primero los artefactos y minerales para el Museo, antes de que este mod los done a un paquete del Centro Comunal. No tiene efecto si Auto Museum Donations no está instalado."
+}

@@ -14,8 +14,17 @@
   "config.donateBulletinBoard.name": "捐赠给公告板",
   "config.donateMissingBundle.name": "捐赠给缺失收集包",
   "config.donateMissingBundle.tooltip": "捐赠给可解锁的废弃Joja超市收集包（一旦可访问）.完成它将启动电影院的建造.",
+
+  "config.valuableItems.title": "贵重物品",
+  "config.withholdValuableItems.name": "保留贵重物品",
+  "config.withholdValuableItems.tooltip": "使棱彩碎片、恐龙蛋以及基础宝石（钻石、红宝石、绿宝石、玉石、海蓝宝石、黄玉、紫水晶）保留在背包中,而不自动捐赠给收集包——目前仅与染料收集包所需的海蓝宝石、以及缺失收集包所需的棱彩碎片有关.此设置与 Auto Museum Donations 对同一批物品的默认设置保持一致.",
+
   "config.otherBundleMods.title": "非原版收集包",
   "config.otherBundleMods.tooltip": "以下选项适用于其他模组添加的收集包,而非原版社区中心.",
   "config.enableUnlockableBundles.name": "支持可解锁收集包模组",
-  "config.enableUnlockableBundles.tooltip": "同时自动捐赠给基于可解锁收集包框架（例如访问雾呜山峰、Joja市民中心）构建的内容包的收集包（如果已安装）.此功能通过反射该框架的内部实现,因为它没有发布自己的物品贡献方式——若你希望避免该风险,请禁用此项."
+  "config.enableUnlockableBundles.tooltip": "同时自动捐赠给基于可解锁收集包框架（例如访问雾呜山峰、Joja市民中心）构建的内容包的收集包（如果已安装）.此功能通过反射该框架的内部实现,因为它没有发布自己的物品贡献方式——若你希望避免该风险,请禁用此项.",
+
+  "config.modCompatibility.title": "模组兼容性",
+  "config.prioritizeMuseum.name": "优先捐赠给博物馆",
+  "config.prioritizeMuseum.tooltip": "如果同时安装了 Auto Museum Donations 模组,则优先让它将文物和矿物捐赠给博物馆,本模组之后才会将其捐赠给社区中心收集包.若未安装该模组,此选项无效."
 }

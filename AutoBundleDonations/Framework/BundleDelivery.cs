@@ -29,15 +29,38 @@ internal sealed class BundleDelivery
   // Vanilla itself hardcodes this bundle index for the bonus room (see AbandonedJojaMart.resetSharedState).
   private const int MissingBundleArea = 6;
 
+  private const string AutoMuseumDonationsModId = "geisiel.AutoMuseumDonations";
+
+  // See ModConfig.WithholdValuableItems. Unqualified object IDs for Prismatic Shard, Dinosaur Egg, and the 7
+  // basic gems - the same curated set Auto Museum Donations withholds by default (confirmed by decompiling its
+  // Framework.DonationFilter.ValuableIds), kept as our own literal list rather than reflecting into that mod so
+  // this also works for players who don't have it installed. Only Aquamarine (Dye Bundle) and Prismatic Shard
+  // (Missing Bundle, one of 5-of-6 alternatives) are ever actually reachable through a vanilla CC bundle slot -
+  // the other 6 IDs are listed for parity with Auto Museum Donations' set but currently match no bundle.
+  private static readonly HashSet<string> ValuableItemIds = new() { "60", "62", "64", "66", "68", "70", "72", "74", "107" };
+
   private readonly ModConfig _config;
   private readonly ChatNotifier _chat;
+  private readonly IModHelper _helper;
   private readonly IMonitor _monitor;
 
-  public BundleDelivery(ModConfig config, ChatNotifier chat, IMonitor monitor)
+  // Qualified item IDs the museum has already been given one full pass to claim (see ShouldDeferToMuseum) - once
+  // an ID lands here, we stop deferring for it and donate straight to the Community Center from then on.
+  private readonly HashSet<string> _museumGraceGiven = new();
+
+  public BundleDelivery(ModConfig config, ChatNotifier chat, IModHelper helper, IMonitor monitor)
   {
     _config = config;
     _chat = chat;
+    _helper = helper;
     _monitor = monitor;
+  }
+
+  // Called on SaveLoaded so grace-period state from a previous save file (possibly under a different museum mod
+  // configuration) never leaks into a new one within the same game launch.
+  public void OnSaveLoaded()
+  {
+    _museumGraceGiven.Clear();
   }
 
   public void Run(Farmer player)
@@ -78,6 +101,10 @@ internal sealed class BundleDelivery
     // Deliberately not gated on cc.areAllAreasComplete() here: that flag only tracks the 6 main rooms, not the
     // Missing Bundle bonus room, so it would wrongly skip Missing Bundle donations right when they're most likely
     // to be relevant (after the main rooms are already done).
+    // Only defer to the museum when it's actually installed - otherwise this would just leave museum-eligible
+    // items permanently undonated to the Community Center for players who don't have any museum-automation mod.
+    bool deferToMuseum = _config.PrioritizeMuseum && _helper.ModRegistry.IsLoaded(AutoMuseumDonationsModId);
+
     Dictionary<string, string> bundleData = Game1.netWorldState.Value.BundleData;
     var bundleIndicesByArea = new Dictionary<int, List<int>>();
     var requiredSlotCountByBundle = new Dictionary<int, int>();
@@ -152,7 +179,7 @@ internal sealed class BundleDelivery
           continue;
         }
 
-        if (TryDonateSlot(player, slotsFilled, slot, ingredientTokens[i], ingredientTokens[i + 1], ingredientTokens[i + 2], bundleName))
+        if (TryDonateSlot(player, slotsFilled, slot, ingredientTokens[i], ingredientTokens[i + 1], ingredientTokens[i + 2], bundleName, deferToMuseum))
         {
           donatedAnything = true;
           donatedToThisBundle = true;
@@ -261,6 +288,24 @@ internal sealed class BundleDelivery
     return cc.shouldNoteAppearInArea(area);
   }
 
+  // See ModConfig.PrioritizeMuseum. Museum-donation mods can layer their own extra filtering on top of vanilla
+  // eligibility - e.g. Auto Museum Donations withholds a curated list of "valuable" items (Prismatic Shard,
+  // Dinosaur Egg, and several gems including Aquamarine, which the Dye Bundle also wants) behind its own
+  // "donate valuable items" setting, off by default. If we deferred to IsItemSuitableForDonation forever, an
+  // item like that would never be donated to either mod: the museum mod declines it every time, and we'd never
+  // stop yielding to a claim it's never going to make. So we give the museum exactly one full Run() pass to
+  // claim an eligible item - if it's still sitting in the player's inventory (and still museum-eligible) the
+  // next time we see it, we conclude the museum mod isn't going to take it and donate it here instead.
+  private bool ShouldDeferToMuseum(string qualifiedItemId)
+  {
+    if (!LibraryMuseum.IsItemSuitableForDonation(qualifiedItemId))
+    {
+      return false;
+    }
+
+    return _museumGraceGiven.Add(qualifiedItemId);
+  }
+
   private bool TryDonateSlot(
     Farmer player,
     NetArray<bool, NetBool> slots,
@@ -268,7 +313,8 @@ internal sealed class BundleDelivery
     string itemIdToken,
     string countToken,
     string qualityToken,
-    string bundleName
+    string bundleName,
+    bool deferToMuseum
   )
   {
     if (!int.TryParse(countToken, out int requiredCount) || !int.TryParse(qualityToken, out int requiredQuality))
@@ -286,7 +332,25 @@ internal sealed class BundleDelivery
         return false;
       }
 
-      return isCategoryMatch ? obj.Category == category : obj.QualifiedItemId == qualifiedId;
+      // Identity match has to come first. This function runs against every item in the player's inventory for
+      // every slot being filled, not just items that could plausibly satisfy this one - so the withhold/defer
+      // checks below (which have side effects: ShouldDeferToMuseum spends this item's one-time museum grace
+      // period the moment it's called) must only ever run against an item that's actually a candidate for THIS
+      // slot. Checking them earlier meant an unrelated slot scanned first in the same Run() call (e.g. Parsnip)
+      // would burn the grace period for every museum-eligible item sitting in inventory just by looking at and
+      // rejecting them, so by the time the loop reached that item's real slot later in the same call, there was
+      // no grace period left and it donated immediately - defeating deferral entirely, confirmed in testing.
+      if (!(isCategoryMatch ? obj.Category == category : obj.QualifiedItemId == qualifiedId))
+      {
+        return false;
+      }
+
+      if (_config.WithholdValuableItems && ValuableItemIds.Contains(obj.ItemId))
+      {
+        return false;
+      }
+
+      return !deferToMuseum || !ShouldDeferToMuseum(obj.QualifiedItemId);
     }
 
     var candidateIndices = new List<int>();

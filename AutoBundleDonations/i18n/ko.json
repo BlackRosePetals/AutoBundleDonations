@@ -1,0 +1,30 @@
+{
+  "chat.donation": "{{item}} {{quantity}}개를 {{bundle}} 꾸러미에 기부했습니다.",
+
+  "config.enabled.name": "활성화",
+  "config.enabled.tooltip": "비활성화하면 어떤 꾸러미 아이템도 자동으로 기부되지 않습니다.",
+  "config.showNotifications.name": "채팅 알림 표시",
+  "config.showNotifications.tooltip": "아이템이 자동으로 기부될 때마다 채팅 메시지를 표시합니다.",
+
+  "config.rooms.title": "방",
+  "config.donatePantry.name": "식료품 저장고에 기부",
+  "config.donateCraftsRoom.name": "공예실에 기부",
+  "config.donateFishTank.name": "어항방에 기부",
+  "config.donateBoilerRoom.name": "보일러실에 기부",
+  "config.donateBulletinBoard.name": "게시판에 기부",
+  "config.donateMissingBundle.name": "누락된 꾸러미에 기부",
+  "config.donateMissingBundle.tooltip": "버려진 조자 마트의 보너스 꾸러미가 접근 가능해지면 기부합니다. 완료하면 영화관 건설이 시작됩니다.",
+
+  "config.valuableItems.title": "귀중한 아이템",
+  "config.withholdValuableItems.name": "귀중한 아이템 보유",
+  "config.withholdValuableItems.tooltip": "프리즘 조각, 공룡 알, 그리고 기본 보석(다이아몬드, 루비, 에메랄드, 옥, 아쿠아마린, 토파즈, 자수정)을 자동으로 꾸러미에 기부하지 않고 인벤토리에 보관합니다 - 현재는 염료 꾸러미의 아쿠아마린과 누락된 꾸러미의 프리즘 조각에만 해당됩니다. Auto Museum Donations의 동일한 아이템에 대한 기본 설정과 일치합니다.",
+
+  "config.otherBundleMods.title": "바닐라가 아닌 꾸러미",
+  "config.otherBundleMods.tooltip": "아래 옵션은 다른 모드가 추가한 꾸러미에 적용되며, 바닐라 커뮤니티 센터에는 적용되지 않습니다.",
+  "config.enableUnlockableBundles.name": "Unlockable Bundles 모드 지원",
+  "config.enableUnlockableBundles.tooltip": "설치되어 있다면 Unlockable Bundles 프레임워크 기반 콘텐츠 팩(예: Visit Mount Vapius, Joja Civic Center)의 꾸러미에도 자동으로 기부합니다. 이 프레임워크는 자체적으로 아이템 기부 방법을 제공하지 않기 때문에 내부 구현에 리플렉션을 사용해 동작합니다. 이 위험을 피하고 싶다면 이 옵션을 비활성화하세요.",
+
+  "config.modCompatibility.title": "모드 호환성",
+  "config.prioritizeMuseum.name": "박물관 기부 우선",
+  "config.prioritizeMuseum.tooltip": "Auto Museum Donations도 설치되어 있다면, 이 모드가 커뮤니티 센터 꾸러미에 기부하기 전에 박물관에 줄 유물과 광물을 그쪽이 먼저 가져가도록 합니다. Auto Museum Donations가 설치되어 있지 않으면 효과가 없습니다."
+}

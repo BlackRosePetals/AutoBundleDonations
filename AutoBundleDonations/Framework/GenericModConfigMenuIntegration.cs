@@ -70,6 +70,14 @@ internal static class GenericModConfigMenuIntegration
       () => I18n.Config_DonateMissingBundle_Name(),
       () => I18n.Config_DonateMissingBundle_Tooltip()
     );
+    api.AddSectionTitle(manifest, () => I18n.Config_ValuableItems_Title());
+    api.AddBoolOption(
+      manifest,
+      () => config.WithholdValuableItems,
+      v => config.WithholdValuableItems = v,
+      () => I18n.Config_WithholdValuableItems_Name(),
+      () => I18n.Config_WithholdValuableItems_Tooltip()
+    );
     api.AddSectionTitle(manifest, () => I18n.Config_OtherBundleMods_Title(), () => I18n.Config_OtherBundleMods_Tooltip());
     api.AddBoolOption(
       manifest,
@@ -77,6 +85,14 @@ internal static class GenericModConfigMenuIntegration
       v => config.EnableUnlockableBundlesIntegration = v,
       () => I18n.Config_EnableUnlockableBundles_Name(),
       () => I18n.Config_EnableUnlockableBundles_Tooltip()
+    );
+    api.AddSectionTitle(manifest, () => I18n.Config_ModCompatibility_Title());
+    api.AddBoolOption(
+      manifest,
+      () => config.PrioritizeMuseum,
+      v => config.PrioritizeMuseum = v,
+      () => I18n.Config_PrioritizeMuseum_Name(),
+      () => I18n.Config_PrioritizeMuseum_Tooltip()
     );
   }
 
@@ -92,5 +108,7 @@ internal static class GenericModConfigMenuIntegration
     config.DonateBulletinBoard = defaults.DonateBulletinBoard;
     config.DonateMissingBundle = defaults.DonateMissingBundle;
     config.EnableUnlockableBundlesIntegration = defaults.EnableUnlockableBundlesIntegration;
+    config.PrioritizeMuseum = defaults.PrioritizeMuseum;
+    config.WithholdValuableItems = defaults.WithholdValuableItems;
   }
 }

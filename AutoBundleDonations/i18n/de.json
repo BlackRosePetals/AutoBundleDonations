@@ -1,0 +1,30 @@
+{
+  "chat.donation": "{{quantity}}x {{item}} an das {{bundle}}-Bündel gespendet.",
+
+  "config.enabled.name": "Aktiviert",
+  "config.enabled.tooltip": "Wenn deaktiviert, werden keine Bündel-Gegenstände automatisch gespendet.",
+  "config.showNotifications.name": "Chat-Benachrichtigungen anzeigen",
+  "config.showNotifications.tooltip": "Zeigt eine Chat-Nachricht an, sobald ein Gegenstand automatisch gespendet wird.",
+
+  "config.rooms.title": "Räume",
+  "config.donatePantry.name": "An die Vorratskammer spenden",
+  "config.donateCraftsRoom.name": "An den Bastelraum spenden",
+  "config.donateFishTank.name": "An das Fischbecken spenden",
+  "config.donateBoilerRoom.name": "An den Heizraum spenden",
+  "config.donateBulletinBoard.name": "An das Anschlagbrett spenden",
+  "config.donateMissingBundle.name": "An das fehlende Bündel spenden",
+  "config.donateMissingBundle.tooltip": "Spendet an das zusätzliche Bündel im verlassenen Joja-Markt, sobald es zugänglich ist. Der Abschluss startet den Bau des Kinos.",
+
+  "config.valuableItems.title": "Wertvolle Gegenstände",
+  "config.withholdValuableItems.name": "Wertvolle Gegenstände zurückhalten",
+  "config.withholdValuableItems.tooltip": "Behält Prismasplitter, Dinosaurierei und die Basisedelsteine (Diamant, Rubin, Smaragd, Jade, Aquamarin, Topas, Amethyst) in deinem Inventar, anstatt sie automatisch an ein Bündel zu spenden - derzeit nur relevant für den Aquamarin des Farbstoff-Bündels und den Prismasplitter des fehlenden Bündels. Entspricht der Standardeinstellung von Auto Museum Donations für dieselben Gegenstände.",
+
+  "config.otherBundleMods.title": "Nicht-vanilla Bündel",
+  "config.otherBundleMods.tooltip": "Die folgenden Optionen gelten für Bündel, die von anderen Mods hinzugefügt wurden, nicht für das originale Gemeinschaftszentrum.",
+  "config.enableUnlockableBundles.name": "Unlockable-Bundles-Mods unterstützen",
+  "config.enableUnlockableBundles.tooltip": "Spendet automatisch auch an Bündel aus Inhaltspaketen, die auf dem Unlockable-Bundles-Framework basieren (z. B. Visit Mount Vapius, Joja Civic Center), falls installiert. Dies funktioniert durch Reflection in die internen Strukturen dieses Frameworks, da es selbst keine Möglichkeit bietet, Gegenstände beizusteuern - deaktiviere diese Option, wenn du dieses Risiko lieber vermeiden möchtest.",
+
+  "config.modCompatibility.title": "Mod-Kompatibilität",
+  "config.prioritizeMuseum.name": "Museum bevorzugen",
+  "config.prioritizeMuseum.tooltip": "Wenn Auto Museum Donations ebenfalls installiert ist, darf es Artefakte und Mineralien zuerst für das Museum beanspruchen, bevor dieser Mod sie stattdessen an ein Gemeinschaftszentrum-Bündel spendet. Hat keine Wirkung, wenn Auto Museum Donations nicht installiert ist."
+}

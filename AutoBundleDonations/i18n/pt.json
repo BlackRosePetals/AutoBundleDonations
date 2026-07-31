@@ -1,0 +1,30 @@
+{
+  "chat.donation": "Doou {{quantity}}x {{item}} para o pacote {{bundle}}.",
+
+  "config.enabled.name": "Ativado",
+  "config.enabled.tooltip": "Quando desativado, nenhum item de pacote é doado automaticamente.",
+  "config.showNotifications.name": "Mostrar notificações no chat",
+  "config.showNotifications.tooltip": "Mostra uma mensagem no chat sempre que um item é doado automaticamente.",
+
+  "config.rooms.title": "Salas",
+  "config.donatePantry.name": "Doar para a Despensa",
+  "config.donateCraftsRoom.name": "Doar para a Sala de Artesanato",
+  "config.donateFishTank.name": "Doar para o Aquário",
+  "config.donateBoilerRoom.name": "Doar para a Sala de Caldeiras",
+  "config.donateBulletinBoard.name": "Doar para o Quadro de Avisos",
+  "config.donateMissingBundle.name": "Doar para o Pacote Perdido",
+  "config.donateMissingBundle.tooltip": "Doa para o pacote bônus do Joja Mart Abandonado assim que ele estiver acessível. Completá-lo inicia a construção do Cinema.",
+
+  "config.valuableItems.title": "Itens valiosos",
+  "config.withholdValuableItems.name": "Reter itens valiosos",
+  "config.withholdValuableItems.tooltip": "Mantém o Fragmento Prismático, o Ovo de Dinossauro e as gemas básicas (Diamante, Rubi, Esmeralda, Jade, Água-marinha, Topázio, Ametista) no seu inventário em vez de doá-los automaticamente para um pacote - atualmente relevante apenas para a Água-marinha do Pacote de Tintura e o Fragmento Prismático do Pacote Perdido. Reflete o padrão do próprio Auto Museum Donations para os mesmos itens.",
+
+  "config.otherBundleMods.title": "Pacotes não vanilla",
+  "config.otherBundleMods.tooltip": "As opções abaixo se aplicam a pacotes adicionados por outros mods, não ao Centro Comunitário original.",
+  "config.enableUnlockableBundles.name": "Suporte a mods Unlockable Bundles",
+  "config.enableUnlockableBundles.tooltip": "Também doa automaticamente para pacotes de content packs baseados no framework Unlockable Bundles (ex: Visit Mount Vapius, Joja Civic Center), se instalados. Isso funciona por reflection nos componentes internos desse framework, já que ele não oferece sua própria forma de contribuir itens - desative esta opção se preferir evitar esse risco.",
+
+  "config.modCompatibility.title": "Compatibilidade com mods",
+  "config.prioritizeMuseum.name": "Priorizar doações ao Museu",
+  "config.prioritizeMuseum.tooltip": "Se o Auto Museum Donations também estiver instalado, deixe que ele reivindique primeiro artefatos e minerais para o Museu, antes deste mod doá-los para um pacote do Centro Comunitário. Não tem efeito se o Auto Museum Donations não estiver instalado."
+}

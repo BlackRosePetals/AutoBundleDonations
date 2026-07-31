@@ -14,8 +14,17 @@
   "config.donateBulletinBoard.name": "Donate to Bulletin Board",
   "config.donateMissingBundle.name": "Donate to the Missing Bundle",
   "config.donateMissingBundle.tooltip": "Donates to the bonus Abandoned Joja Mart bundle once it's accessible. Completing it starts construction of the Movie Theater.",
+
+  "config.valuableItems.title": "Valuable items",
+  "config.withholdValuableItems.name": "Withhold valuable items",
+  "config.withholdValuableItems.tooltip": "Keep Prismatic Shard, Dinosaur Egg, and the basic gems (Diamond, Ruby, Emerald, Jade, Aquamarine, Topaz, Amethyst) in your inventory instead of auto-donating them to a bundle - currently only relevant for the Dye Bundle's Aquamarine and the Missing Bundle's Prismatic Shard. Mirrors Auto Museum Donations' own default for the same items.",
+
   "config.otherBundleMods.title": "Non-vanilla bundles",
   "config.otherBundleMods.tooltip": "Options below apply to bundles added by other mods, not the vanilla Community Center.",
   "config.enableUnlockableBundles.name": "Support Unlockable Bundles mods",
-  "config.enableUnlockableBundles.tooltip": "Also auto-donate to bundles from content packs built on the Unlockable Bundles framework (e.g. Visit Mount Vapius, Joja Civic Center), if installed. This works by reflecting into that framework's internals, since it doesn't publish its own way to contribute items - disable this if you'd rather avoid that risk."
+  "config.enableUnlockableBundles.tooltip": "Also auto-donate to bundles from content packs built on the Unlockable Bundles framework (e.g. Visit Mount Vapius, Joja Civic Center), if installed. This works by reflecting into that framework's internals, since it doesn't publish its own way to contribute items - disable this if you'd rather avoid that risk.",
+
+  "config.modCompatibility.title": "Mod compatibility",
+  "config.prioritizeMuseum.name": "Prioritize Museum donations",
+  "config.prioritizeMuseum.tooltip": "If Auto Museum Donations is also installed, let it claim artifacts and minerals for the Museum first, before this mod donates them to a Community Center bundle instead. Has no effect unless Auto Museum Donations is installed."
 }

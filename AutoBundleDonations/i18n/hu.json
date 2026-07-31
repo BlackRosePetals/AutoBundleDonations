@@ -1,0 +1,30 @@
+{
+  "chat.donation": "{{quantity}}x {{item}} adományozva a(z) {{bundle}} csomagnak.",
+
+  "config.enabled.name": "Engedélyezve",
+  "config.enabled.tooltip": "Ha ki van kapcsolva, semmilyen csomag-tárgy nem lesz automatikusan adományozva.",
+  "config.showNotifications.name": "Chat-értesítések megjelenítése",
+  "config.showNotifications.tooltip": "Chatüzenetet jelenít meg minden alkalommal, amikor egy tárgy automatikusan adományozásra kerül.",
+
+  "config.rooms.title": "Szobák",
+  "config.donatePantry.name": "Adományozás az Éléskamrának",
+  "config.donateCraftsRoom.name": "Adományozás a Kézműves szobának",
+  "config.donateFishTank.name": "Adományozás a Haltartálynak",
+  "config.donateBoilerRoom.name": "Adományozás a Kazánháznak",
+  "config.donateBulletinBoard.name": "Adományozás a Hirdetőtáblának",
+  "config.donateMissingBundle.name": "Adományozás a Hiányzó csomagnak",
+  "config.donateMissingBundle.tooltip": "Adományoz az Elhagyott Joja Áruház bónusz csomagjának, amint az elérhetővé válik. A teljesítése elindítja a Mozi felépítését.",
+
+  "config.valuableItems.title": "Értékes tárgyak",
+  "config.withholdValuableItems.name": "Értékes tárgyak visszatartása",
+  "config.withholdValuableItems.tooltip": "A Prizmakristályt, a Dínótojást és az alap drágaköveket (Gyémánt, Rubin, Smaragd, Jade, Akvamarin, Topáz, Ametiszt) a leltáradban tartja ahelyett, hogy automatikusan egy csomagnak adományozná - jelenleg csak a Festék csomag Akvamarinjára és a Hiányzó csomag Prizmakristályára vonatkozik. Megegyezik az Auto Museum Donations alapértelmezett beállításával ugyanezekre a tárgyakra.",
+
+  "config.otherBundleMods.title": "Nem-vanilla csomagok",
+  "config.otherBundleMods.tooltip": "Az alábbi beállítások más modok által hozzáadott csomagokra vonatkoznak, nem az eredeti Közösségi Központra.",
+  "config.enableUnlockableBundles.name": "Unlockable Bundles modok támogatása",
+  "config.enableUnlockableBundles.tooltip": "Automatikusan adományoz az Unlockable Bundles keretrendszerre épülő tartalomcsomagok (pl. Visit Mount Vapius, Joja Civic Center) csomagjainak is, ha telepítve vannak. Ez a keretrendszer belső működésébe való reflection-ön keresztül működik, mivel az nem biztosít saját módot a tárgyak hozzájárulására - kapcsold ki, ha inkább elkerülnéd ezt a kockázatot.",
+
+  "config.modCompatibility.title": "Mod-kompatibilitás",
+  "config.prioritizeMuseum.name": "Múzeum előnyben részesítése",
+  "config.prioritizeMuseum.tooltip": "Ha az Auto Museum Donations is telepítve van, engedd, hogy először az igényelje a Múzeumnak szánt tárgyakat és ásványokat, mielőtt ez a mod egy Közösségi Központ csomagnak adományozná őket. Nincs hatása, ha az Auto Museum Donations nincs telepítve."
+}

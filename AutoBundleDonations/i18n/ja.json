@@ -1,0 +1,30 @@
+{
+  "chat.donation": "「{{bundle}}」の寄贈品セットに{{item}}を{{quantity}}個寄付しました。",
+
+  "config.enabled.name": "有効",
+  "config.enabled.tooltip": "オフにすると、寄贈品が自動的に寄付されなくなります。",
+  "config.showNotifications.name": "チャット通知を表示",
+  "config.showNotifications.tooltip": "アイテムが自動的に寄付されるたびに、チャットメッセージを表示します。",
+
+  "config.rooms.title": "部屋",
+  "config.donatePantry.name": "食料貯蔵庫に寄付",
+  "config.donateCraftsRoom.name": "工作室に寄付",
+  "config.donateFishTank.name": "水槽室に寄付",
+  "config.donateBoilerRoom.name": "ボイラー室に寄付",
+  "config.donateBulletinBoard.name": "掲示板に寄付",
+  "config.donateMissingBundle.name": "欠けている寄贈品セットに寄付",
+  "config.donateMissingBundle.tooltip": "廃棄されたジョジャマートのボーナス寄贈品セットが利用可能になった時点で寄付します。完成すると映画館の建設が始まります。",
+
+  "config.valuableItems.title": "貴重なアイテム",
+  "config.withholdValuableItems.name": "貴重なアイテムを保持",
+  "config.withholdValuableItems.tooltip": "プリズムの欠片、恐竜の卵、および基本的な宝石（ダイヤモンド、ルビー、エメラルド、ヒスイ、アクアマリン、トパーズ、アメジスト）を自動で寄付せず、インベントリに保持します。現在のところ、染料の寄贈品セットのアクアマリンと、欠けている寄贈品セットのプリズムの欠片にのみ関係します。Auto Museum Donationsの同じアイテムに対するデフォルト設定と一致します。",
+
+  "config.otherBundleMods.title": "バニラ以外の寄贈品セット",
+  "config.otherBundleMods.tooltip": "以下のオプションは、他のMODによって追加された寄贈品セットに適用され、バニラのコミュニティセンターには適用されません。",
+  "config.enableUnlockableBundles.name": "Unlockable Bundles系MODのサポート",
+  "config.enableUnlockableBundles.tooltip": "Unlockable Bundlesフレームワークを使用したコンテンツパック（Visit Mount Vapius、Joja Civic Centerなど）の寄贈品セットにも、インストールされていれば自動的に寄付します。このフレームワーク自体がアイテムを寄付する手段を公開していないため、内部実装へのリフレクションによって動作します。そのリスクを避けたい場合はこのオプションを無効にしてください。",
+
+  "config.modCompatibility.title": "MOD互換性",
+  "config.prioritizeMuseum.name": "博物館への寄付を優先",
+  "config.prioritizeMuseum.tooltip": "Auto Museum Donationsも導入されている場合、このMODがコミュニティセンターの寄贈品セットに寄付する前に、博物館への遺物や鉱物の寄付をそちらに先に行わせます。Auto Museum Donationsが導入されていない場合、このオプションは効果がありません。"
+}
