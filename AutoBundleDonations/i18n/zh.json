@@ -3,8 +3,8 @@
 
   "config.enabled.name": "启用",
   "config.enabled.tooltip": "关闭时, 不会自动捐赠任何收集包物品.",
-  "config.showNotifications.name": "显示聊天通知",
-  "config.showNotifications.tooltip": "每当自动捐赠物品时显示一条聊天消息.",
+  "config.showNotifications.name": "显示捐赠消息通知",
+  "config.showNotifications.tooltip": "每当自动捐赠物品时显示一条捐赠消息通知.",
 
   "config.rooms.title": "房间",
   "config.donatePantry.name": "捐赠给茶水间",
